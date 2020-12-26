@@ -3,4 +3,6 @@ project(client)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(client connectionHandler.h connectionHandler.cpp echoClient.cpp)
+add_executable(client connectionHandler.h connectionHandler.cpp echoClient.cpp Task.h Task.cpp)
+
+
