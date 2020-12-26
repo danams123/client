@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
 
     clientTask task1();
     serverTask task2();
-    std::dsdfd
+    std::thread t
 
 	//From here we will see the rest of the ehco client implementation:
 //    while (1) {
