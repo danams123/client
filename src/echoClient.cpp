@@ -2,6 +2,7 @@
 #include "../include/connectionHandler.h"
 #include "../include/Task.h"
 #include <iostream>
+#include <thread>
 
 /**
 * This code assumes that the server replies the exact text the client sent it (as opposed to the practical session example)
@@ -19,12 +20,15 @@ int main (int argc, char *argv[]) {
         std::cerr << "Cannot connect to " << host << ":" << port << std::endl;
         return 1;
     }
+    bool shouldTerminate = false;
+    clientTask task1(&connectionHandler, &shouldTerminate);
+    serverTask task2(&connectionHandler, &shouldTerminate);
+    std::thread th1(&clientTask::run, &task1);
+    std::thread th2(&serverTask::run, &task2);
+    th1.detach();
+    th2.detach();
 
-    clientTask task1();
-    serverTask task2();
-    std::thread t
-
-	//From here we will see the rest of the ehco client implementation:
+    //From here we will see the rest of the ehco client implementation:
 //    while (1) {
 //        const short bufsize = 1024;
 //        //TODO do we need to add an option to double the size of the buffer if needed? if the input isn't valid throw an exception?
