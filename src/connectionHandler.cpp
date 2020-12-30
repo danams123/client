@@ -85,6 +85,9 @@ bool ConnectionHandler::getFrameAscii(std::string& frame, char delimiter) {
 		}
 		if(ch!='\0')  
 			frame.append(1, ch);
+		else{
+		    frame.append(1,'\n');
+		}
 	}while (delimiter != ch);
     } catch (std::exception& e) {
 	std::cerr << "recv failed2 (Error: " << e.what() << ')' << std::endl;
@@ -107,4 +110,69 @@ void ConnectionHandler::close() {
     } catch (...) {
         std::cout << "closing failed: connection already closed" << std::endl;
     }
+}
+
+char* ConnectionHandler::decode(char* bytesArr){
+    const char delim[2] = " ";
+    char *token;//possible memory leak
+    token = strtok(bytesArr, delim);
+    std::string line(token);//check if that works
+    short OPcode;
+    bool append;
+    if(line == "ADMINREG"){
+        OPcode = 1;
+        append = true;
+    }
+    else if(line == "STUDENTREG"){
+        OPcode = 2;
+        append = true;
+    }
+    else if(line == "LOGOUT"){
+        OPcode = 3;
+        append = true;
+    }
+    else if(line == "LOGOUT"){
+        OPcode = 4;
+        append = false;
+    }
+    else if(line == "COURSEREG"){
+        OPcode = 5;
+        append = false;
+    }
+    else if(line == "KDAMCHECK"){
+        OPcode = 6;
+        append = false;
+    }
+    else if(line == "COURSESTAT"){
+        OPcode = 7;
+        append = true;
+    }
+    else if(line == "STUDENTSTAT"){
+        OPcode = 8;
+        append = false;
+
+    }
+    else if(line == "ISREGISTERED"){
+        OPcode = 9;
+        append = false;
+    }
+    else if(line == "UNREGISTER"){
+        OPcode = 10;
+        append = false;
+    }
+    else{
+        OPcode = 11;
+        append = false;
+    }
+    char* output = new char(1024);
+    output[0] = ((OPcode >> 8) & 0xFF);
+    output[1] = (OPcode & 0xFF);
+    while(token != NULL) {
+        token = strtok(NULL," ");//check if it work!
+        strcat(output, token);
+        if(append) {
+            output[strlen(output) + 1] = '\0';
+        }
+    }
+    return output;
 }
