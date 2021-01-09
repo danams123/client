@@ -5,24 +5,17 @@
 
 class Task{
 public:
-    Task(ConnectionHandler *connectionhandler, bool &shouldTerminate);
-    virtual void run()=0;
+    //implementing the rule of 3 because of the connectionHandler pointer
+    Task(ConnectionHandler *connectionHandler);
+    virtual ~Task();
+    Task(const Task& other);
+    const Task& operator = (const Task& other);
 
-protected:
-    bool shouldTerminate;
+    void run();
+
+private:
+    //in order to pass the connectionHandler by ref
     ConnectionHandler* connectionHandler;
-};
-
-class clientTask: public Task{
-public:
-    clientTask(ConnectionHandler *connectionHandler, bool &shouldTerminate);
-    virtual void run();
-};
-
-class serverTask: public Task{
-public:
-    serverTask(ConnectionHandler *connectionHandler, bool &shouldTerminate);
-    virtual void run();
 };
 
 #endif //CLIENT_TASK_H
